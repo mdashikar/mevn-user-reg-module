@@ -63,15 +63,20 @@
         },
         methods:{
             loginUser(){
-                alert(this.email + ' '+ this.password);
-                axios.post(``)
-                    .then(response => {
-                    // JSON responses are automatically parsed.
-                    this.posts = response.data
-                    })
-                    .catch(e => {
+                
+                axios.post('http://localhost:5050/addname', {
+                    email: this.email,
+                    password: this.password
+                })
+                .then(response => {
+                // JSON responses are automatically parsed.
+                    console.log(response)
+                    alert(response.data);
+                })
+                .catch(e => {
                     this.errors.push(e)
-                    })
+                    alert(e);
+                })
             }
         }
     }
