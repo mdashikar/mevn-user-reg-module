@@ -12,7 +12,7 @@ const serveStatic = require('serve-static');
 const config = require('./config/secret');
 var app = express();
 
-app.use(serveStatic(__dirname + "/dist"));
+app.use(serveStatic(__dirname + '../../dist'));
 
 
 mongoose.connect(config.database, function(err){

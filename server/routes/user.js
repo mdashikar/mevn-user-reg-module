@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
 		  if (!user) { return res.send(info.message); }
 		  req.logIn(user, function(err) {
 			if (err) { return next(err); }
-			return res.send(user.local.username);
+			return res.send('Authencated success!!! Your username is ' + user.local.username);
 		  });
 		})(req, res, next);
 	  });
