@@ -64,7 +64,7 @@
         methods:{
             loginUser(){
                 
-                axios.post('http://localhost:5050/login', {
+                axios.post('http://account.mdashikar.com/login', {
                     email: this.email,
                     password: this.password
                 })

@@ -112,7 +112,7 @@ export default {
         },
         registerUser(){
                 
-            axios.post('http://localhost:5050/signup', {
+            axios.post('http://account.mdashikar.com/signup', {
                 name: this.userData.name,
                 username: this.userData.username,
                 email: this.userData.email,
