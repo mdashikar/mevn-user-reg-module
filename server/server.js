@@ -8,8 +8,11 @@ const passport = require('passport');
 const flash    = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const session      = require('express-session');
+const serveStatic = require('serve-static');
 const config = require('./config/secret');
 var app = express();
+
+app.use(serveStatic(__dirname + "/dist"));
 
 
 mongoose.connect(config.database, function(err){
