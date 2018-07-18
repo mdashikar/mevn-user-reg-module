@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import User from '@/components/User'
 import Login from '@/components/Login'
 import RegisterUser from '@/components/RegisterUser'
 
@@ -18,6 +18,11 @@ export default new Router({
       path: '/register',
       name: 'RegisterUser',
       component: RegisterUser
+    },
+    {
+      path: '/getdata',
+      name: 'User',
+      component: User
     }
   ]
 })
