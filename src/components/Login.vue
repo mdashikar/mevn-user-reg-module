@@ -12,7 +12,7 @@
                     </span>
 
                     <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" v-model="email" placeholder="Email" >
+                        <input class="input100" type="email" v-model="email" placeholder="Email" required>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -20,7 +20,7 @@
                     </div>
 
                     <div class="wrap-input100 validate-input" data-validate = "Password is required">
-                        <input class="input100" type="password" v-model="password" placeholder="Password">
+                        <input class="input100" type="password" v-model="password" placeholder="Password" required>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-lock" aria-hidden="true"></i>
@@ -37,9 +37,15 @@
                         <span class="txt1">
                             Forgot
                         </span>
-                        <a class="txt2" href="#">
+                        <a class="txt2" href="#" @click="forgotPass">
                             Username / Password?
                         </a>
+                    </div>
+                    <div class="input-group mb-3" v-if="isClicked">
+                        <input type="text" class="form-control" v-model="findUser" placeholder="username/email" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" @click.prevent="sendResetToken">Submit</button>
+                        </div>
                     </div>
 
                     <div class="text-center p-t-136">
@@ -60,7 +66,9 @@
         data(){
             return{
                 email:'',
-                password:''
+                password:'',
+                isClicked: false,
+                findUser : ''
             }
         },
         computed: {
@@ -73,6 +81,20 @@
             ...mapActions({
                 setUserData : 'setUser'
             }),
+            forgotPass(){
+                this.isClicked = true;
+            },
+            sendResetToken(){
+                axios.post(this.url + '/reset-password', {
+                    findUser : this.findUser
+                }).
+                then(response => {
+                    console.log(response);
+                })
+                .catch( e => {
+                    console.log(e);
+                })
+            },
             loginUser(){
                 axios.post(this.url + '/login', {
                     email: this.email,

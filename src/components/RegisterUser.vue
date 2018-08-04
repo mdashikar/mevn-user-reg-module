@@ -12,14 +12,14 @@
                    </span>
 
                    <div class="wrap-input100 validate-input" data-validate = "Name is required. ">
-                       <input class="input100" type="text" v-model="userData.name" placeholder="Full name" >
+                       <input class="input100" type="text" v-model="userData.name" placeholder="Full name" required>
                        <span class="focus-input100"></span>
                        <span class="symbol-input100">
                            <i class="fa fa-user" aria-hidden="true"></i>
                        </span>
                    </div>
                    <div class="wrap-input100 validate-input" data-validate = "Valid username is required: abc123">
-                       <input class="input100" type="text" v-model="userData.username" placeholder="Username" >
+                       <input class="input100" type="text" v-model="userData.username" placeholder="Username" required>
                        <span class="focus-input100"></span>
                        <span class="symbol-input100">
                            <i class="fa fa-user" aria-hidden="true"></i>
@@ -27,7 +27,7 @@
                    </div>
                    
                    <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                       <input class="input100" type="email" v-model="userData.email" placeholder="Email" >
+                       <input class="input100" type="email" v-model="userData.email" placeholder="Email" required>
                        <span class="focus-input100"></span>
                        <span class="symbol-input100">
                            <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -35,7 +35,7 @@
                    </div>
 
                    <div class="wrap-input100 validate-input" data-validate = "Password is required">
-                       <input class="input100" type="password" v-model="userData.password" placeholder="Password">
+                       <input class="input100" type="password" v-model="userData.password" placeholder="Password" required>
                        <span class="focus-input100"></span>
                        <span class="symbol-input100">
                            <i class="fa fa-lock" aria-hidden="true"></i>
@@ -44,7 +44,7 @@
                    
 
                    <div class="wrap-input100 validate-input" data-validate = "Re-enter password is required">
-                       <input class="input100" type="password" v-model="confirmPassword" placeholder="Re-enter password">
+                       <input class="input100" type="password" v-model="confirmPassword" placeholder="Re-enter password" required>
                        <span class="focus-input100"></span>
                        <span class="symbol-input100">
                            <i class="fa fa-lock" aria-hidden="true"></i>
