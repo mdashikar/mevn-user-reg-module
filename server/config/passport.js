@@ -48,10 +48,13 @@ module.exports = function(passport) {
             // if there are any errors, return the error before anything else
             if (err)
                 return done(err);
-
-            // if no user is found, return the message
+                 // if no user is found, return the message
             if (!user)
-                return done(null, false, {message: 'User not found.'}); // req.flash is the way to set flashdata using connect-flash
+            return done(null, false, {message: 'User not found.'}); // req.flash is the way to set flashdata using connect-flash
+            // if user is not verfied, return the error before anything else
+            if (!user.local.isVerified)
+                return done(null, false, {message: 'Please verify your email address to log-in!!!!.'});
+           
             // if the user is found but the password is wrong
             if (!user.validPassword(password))
                 return done(null, false, {message: 'Incorrect password.'}); // create the loginMessage and save it to session as flashdata

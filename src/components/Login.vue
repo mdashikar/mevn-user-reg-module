@@ -54,6 +54,8 @@
 
 <script>
     import axios from 'axios';
+    import {mapGetters, mapActions} from 'vuex';
+
     export default {
         data(){
             return{
@@ -61,26 +63,56 @@
                 password:''
             }
         },
+        computed: {
+            ...mapGetters([
+                'url',
+                'baseUrl'
+            ])
+        },
         methods:{
+            ...mapActions({
+                setUserData : 'setUser'
+            }),
             loginUser(){
-                
-                axios.post('http://account.mdashikar.com/login', {
+                axios.post(this.url + '/login', {
                     email: this.email,
                     password: this.password
                 })
                 .then(response => {
                 // JSON responses are automatically parsed.
-                    console.log(response)
-                    alert(response.data);
+                    
+                    if(response.data.local){
+                        this.setUserData(response.data.local);
+                        this.$router.push({name: 'User'})
+                    }else{
+                        alert(response.data);
+                    }
+                   
                 })
                 .catch(e => {
                     this.errors.push(e)
                 })
-            }
+            },
+            isLoged(){
+                axios.get(this.url + '/user', {withCredentials: true})
+                    .then(response => {
+                        if(response.data.local){
+                            this.setUserData(response.data.local);
+                            this.$router.push({name: 'User'})
+                        }
+                    })
+                    .catch(e => {
+                        this.errors.push(e)
+                    })
+
+            },
+        },
+        mounted(){
+            this.isLoged();
         }
     }
 </script>
 
-<style>
+<style scoped>
 
 </style>

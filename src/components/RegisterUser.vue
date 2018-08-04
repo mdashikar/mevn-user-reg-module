@@ -84,6 +84,7 @@
 
 <script>
 import axios from 'axios';
+import {mapGetters} from 'vuex';
 export default {
     data(){
         return{
@@ -100,6 +101,11 @@ export default {
 
         }
     },
+    computed:{
+        ...mapGetters([
+            'url'
+        ])
+    },
     methods:{
         comparePassword(){
             if(this.userData.password == this.confirmPassword){
@@ -112,7 +118,7 @@ export default {
         },
         registerUser(){
                 
-            axios.post('http://account.mdashikar.com/signup', {
+            axios.post(this.url + '/signup', {
                 name: this.userData.name,
                 username: this.userData.username,
                 email: this.userData.email,
@@ -120,9 +126,13 @@ export default {
             })
             .then(response => {
             // JSON responses are automatically parsed.
-                this.userData = '';
-                this.confirmPassword = '';
-                alert(response.data);
+                if(response.data.success){
+                    console.log(response);
+                    this.$router.push({name: 'Login'})
+                }else{
+                    alert(response.data);
+                }
+               
 
             })
             .catch(e => {

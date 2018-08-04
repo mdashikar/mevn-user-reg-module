@@ -1,41 +1,57 @@
 <template>
     <div>
-        <dl v-for="item in bigData.data">
-            <dt>Name:-</dt>
-            <dd>{{ item.name}}</dd>
-            <dt>Email</dt>
-            <dd>{{ item.email }}</dd>
-        </dl>
+        <app-header></app-header>
+         <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+            <h1 class="display-3">Hello, {{user.name}}!</h1>
+            <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from 'axios';
+    import Header from '../Header.vue'
+    import {mapGetters, mapActions} from 'vuex'
     export default {
         data(){
             return{
-                bigData : [],
-                user : []
             }
+        },
+        components:{
+            appHeader: Header
+        },
+        computed:{
+            ...mapGetters([
+                'user',
+                'url'
+            ])
         },
         methods:{
-            init(){
-                //call API
-                axios.get( ('http://localhost:5050/getdata')).
-                    then( (res) => {
-                        console.log(res)
-                        this.bigData = res;
+             ...mapActions({
+                setUserData : 'setUser'
+            }),
+            isLoged(){
+                axios.get(this.url + '/user', {withCredentials: true})
+                    .then(response => {
+                        if(response.data.local){
+                            this.setUserData(response.data.local);
+                        }else{
+                            this.$router.push({name: 'Login'})
+                        }
+                    })
+                    .catch(e => {
+                        this.errors.push(e)
                     })
 
-                axios.get(('http://localhost:5050/data')).
-                    then((res) => {
-                        console.log(res);
-                        this.user = res.data
-                    })   
-            }
+            },
+            
         },
-        mounted(){
-            this.init()
+        created(){
+            this.isLoged();
         }
     }
 </script>

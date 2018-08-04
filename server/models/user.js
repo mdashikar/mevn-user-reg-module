@@ -2,6 +2,7 @@
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt');
+//const bycrpt = require('bcrypt-nodejs');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
@@ -12,13 +13,19 @@ var userSchema = mongoose.Schema({
             unique: true,
             trim: true
         },
-        password     : String,
+        password: String,
         name: String,
         username: {
             type: String,
             unique: true,
             trim: true
-        }   
+        },
+        isVerified: {
+            type: Boolean,
+            default: false
+        },
+        verifyEmail: String,
+        resetPassword: String
     },
     facebook         : {
         id           : String,
@@ -55,13 +62,22 @@ userSchema.methods.validPassword = function(password) {
 //hashing a password before saving it to the database
 userSchema.pre('save', function (next) {
     var user = this.local;
-    bcrypt.hash(user.password, 10, function (err, hash){
-      if (err) {
-        return next(err);
-      }
-      user.password = hash;
-      next();
-    })
-  });
+    console.log("It on user " + user);
+    if(this.local.isModified('password') || this.local.isNew) {
+        console.log("New or password modified and pass is " + user.password);
+        bcrypt.hash(user.password, 10, function (err, hash){
+            if (err) {
+              return next(err);
+            }
+            user.password = hash;
+            console.log('hashed pass ' + user.password);
+            next();
+        })
+    }else {
+        return next();
+    }
+    
+});
+
 //create the model for users and expose it to our app
 module.exports = mongoose.model('User', userSchema);
