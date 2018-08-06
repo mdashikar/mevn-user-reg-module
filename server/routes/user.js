@@ -55,8 +55,8 @@ module.exports = function(app, passport) {
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'md.arif.ask@gmail.com',
-                        pass: 'Takemig33'
+                        user: 'your email',
+                        pass: 'your pass'
                     }
                 });
                 const mailOptions = {
@@ -158,8 +158,8 @@ module.exports = function(app, passport) {
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'md.arif.ask@gmail.com',
-                        pass: 'Takemig33'
+                        user: 'your email',
+                        pass: 'your pass'
                     }
                 });
                 const mailOptions = {
