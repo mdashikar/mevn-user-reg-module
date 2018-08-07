@@ -1,6 +1,10 @@
 <template>
-    <div class="limiter">
+    <div class="limiter" v-loading.body="loading">
+        <div class="alert alert-danger fade show" v-if="msg.length > 0" role="alert">
+            <strong>Oh snap!!</strong> {{msg}}
+        </div>
         <div class="container-login100">
+            
             <div class="wrap-login100">
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="/static/images/img-01.png" alt="IMG">
@@ -28,7 +32,7 @@
                     </div>
                     
                     <div class="container-login100-form-btn">
-                        <button class="login100-form-btn" @click.prevent="loginUser">
+                        <button class="login100-form-btn" @click.prevent="loginUser" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="Loading...">
                             Login
                         </button>
                     </div>
@@ -37,18 +41,18 @@
                         <span class="txt1">
                             Forgot
                         </span>
-                        <a class="txt2" href="#" @click="forgotPass">
+                        <a class="txt2" href="#" @click.prevent="isClicked = !isClicked">
                             Username / Password?
                         </a>
                     </div>
-                    <div class="input-group mb-3" v-if="isClicked">
-                        <input type="text" class="form-control" v-model="findUser" placeholder="username/email" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <div class="input-group mb-3 mt-3" v-if="isClicked">
+                        <input type="text" class="form-control" v-model="findUser" placeholder="username/email" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" @click.prevent="sendResetToken">Submit</button>
+                            <button class="btn btn-outline-secondary" type="button" @click.prevent="sendResetToken" v-loading.fullscreen.lock="fullscreenLoading">Submit</button>
                         </div>
                     </div>
 
-                    <div class="text-center p-t-136">
+                    <div class="text-center p-t-96">
         
                         <router-link to="/register" class="txt2">Create your Account <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></router-link>
                     </div>
@@ -68,7 +72,10 @@
                 email:'',
                 password:'',
                 isClicked: false,
-                findUser : ''
+                findUser : '',
+                fullscreenLoading: false,
+                loading: true,
+                msg: ''
             }
         },
         computed: {
@@ -85,10 +92,12 @@
                 this.isClicked = true;
             },
             sendResetToken(){
+                this.fullscreenLoading = true;
                 axios.post(this.url + '/reset-password', {
                     findUser : this.findUser
                 }).
                 then(response => {
+                    this.fullscreenLoading = false;
                     console.log(response);
                 })
                 .catch( e => {
@@ -96,18 +105,19 @@
                 })
             },
             loginUser(){
+                this.fullscreenLoading = true;
                 axios.post(this.url + '/login', {
                     email: this.email,
                     password: this.password
                 })
                 .then(response => {
                 // JSON responses are automatically parsed.
-                    
+                    this.fullscreenLoading = false;
                     if(response.data.local){
                         this.setUserData(response.data.local);
                         this.$router.push({name: 'User'})
                     }else{
-                        alert(response.data);
+                        this.msg = response.data;
                     }
                    
                 })
@@ -118,10 +128,11 @@
             isLoged(){
                 axios.get(this.url + '/user', {withCredentials: true})
                     .then(response => {
+                        this.loading = false;
                         if(response.data.local){
                             this.setUserData(response.data.local);
-                            this.$router.push({name: 'User'})
-                        }
+                            this.$router.push({name: 'User'});  
+                        }  
                     })
                     .catch(e => {
                         this.errors.push(e)
@@ -129,8 +140,9 @@
 
             },
         },
-        mounted(){
+        created(){
             this.isLoged();
+            
         }
     }
 </script>

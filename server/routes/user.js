@@ -120,21 +120,26 @@ module.exports = function(app, passport) {
         });
     });
     app.post('/reset', (req, res) => {
-            User.findOne({ 'local.resetPassword': req.body.resetToken }, function(err, result) {
+            User.findOne({ $and: [ {'local.resetPassword': req.body.resetToken}, { 'local.resetPasswordExpires': { $gt: Date.now() }}]}, function(err, result) {
                 if (err) {
                     return res.send(err);
                 }
                 if (!result) {
-                    return res.send("Link Broken!!!");
+                    return res.send("Password reset token is invalid or has expired.");
                 }
 
                 result.local.password = req.body.newPassword;
+                result.local.resetPassword = undefined;
+                result.local.resetPasswordExpires = undefined;
+                
+                let hash = bcrypt.hashSync(result.local.password, 12);
+                result.local.password = hash;
 
                 result.save(function(err) {
                     if (err) {
                         console.log(err)
                     } else {
-
+                        
                         res.send({
                             resetPassword: true
                         })
@@ -142,7 +147,7 @@ module.exports = function(app, passport) {
 
                 });
             });
-        })
+        });
         // reset password 
     app.post('/reset-password', (req, res) => {
         User.findOne({ $or: [{ 'local.email': req.body.findUser }, { 'local.username': req.body.findUser }] }, function(err, user) {
@@ -154,7 +159,7 @@ module.exports = function(app, passport) {
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
                 let updateHash = hash.replace(/[/]/g, '');
-                const link = 'http://localhost:8080/reset-password/' + updateHash;
+                const link = 'http://localhost:8080/reset/' + updateHash;
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
@@ -164,7 +169,7 @@ module.exports = function(app, passport) {
                 });
                 const mailOptions = {
                     from: 'support@mdashikar.com', // sender address
-                    to: req.body.email, // list of receivers
+                    to: user.local.email, // list of receivers
                     subject: 'Please reset your password', // Subject line
                     html: `<p>Please click the link below to reset your password</p><br> <a href="${link}">Reset Password</a>`
 
@@ -172,6 +177,7 @@ module.exports = function(app, passport) {
                 };
 
                 user.local.resetPassword = updateHash;
+                user.local.resetPasswordExpires = Date.now() + 172800000; // 48 hours
                 user.save(function() {
                     if (err) {
                         console.log(err)

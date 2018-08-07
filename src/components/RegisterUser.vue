@@ -61,17 +61,7 @@
                           Register
                        </button>
                    </div>
-
-                   <div class="text-center p-t-12">
-                       <span class="txt1">
-                           Forgot
-                       </span>
-                       <a class="txt2" href="#">
-                           Username / Password?
-                       </a>
-                   </div>
-
-                   <div class="text-center p-t-136">
+                   <div class="text-center p-t-45">
        
                        <router-link to="/" class="txt2">Login <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></router-link>
                        

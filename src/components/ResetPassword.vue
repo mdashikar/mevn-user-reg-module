@@ -4,6 +4,7 @@
         <div class="container-login100">
             <div class="container pt-5">
                     <div class="wrap-input100 validate-input" data-validate = "Enter your new password">
+                       
                      <input class="input100" type="password" v-model="password" placeholder="Enter your new password" required>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -29,7 +30,8 @@
         data(){
             return{
                 resetToken : this.$route.params.id,
-                isVerified : false
+                isVerified : false,
+                password : '',
             }
         },
         components:{
@@ -45,7 +47,8 @@
             
             resetPass(){
                 axios.post(this.url + '/reset', {
-                    resetToken : this.resetToken
+                    resetToken : this.resetToken,
+                    newPassword: this.password
                 }).then( response => {
                     // if(response.data.validation){
                     //     this.isVerified = true;

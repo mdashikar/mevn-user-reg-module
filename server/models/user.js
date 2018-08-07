@@ -1,14 +1,14 @@
 // app/models/user.js
 // load the things we need
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
+var bcrypt   = require('bcrypt');
 //const bycrpt = require('bcrypt-nodejs');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
 
-    local: {
-        email: {
+    local            : {
+        email        : {
             type: String,
             unique: true,
             trim: true
@@ -25,25 +25,26 @@ var userSchema = mongoose.Schema({
             default: false
         },
         verifyEmail: String,
-        resetPassword: String
+        resetPassword: String,
+        resetPasswordExpires: Date
     },
-    facebook: {
-        id: String,
-        token: String,
-        name: String,
-        email: String
+    facebook         : {
+        id           : String,
+        token        : String,
+        name         : String,
+        email        : String
     },
-    twitter: {
-        id: String,
-        token: String,
-        displayName: String,
-        username: String
+    twitter          : {
+        id           : String,
+        token        : String,
+        displayName  : String,
+        username     : String
     },
-    google: {
-        id: String,
-        token: String,
-        email: String,
-        name: String
+    google           : {
+        id           : String,
+        token        : String,
+        email        : String,
+        name         : String
     }
 
 });
@@ -60,22 +61,24 @@ userSchema.methods.validPassword = function(password) {
 };
 
 //hashing a password before saving it to the database
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
     var user = this.local;
-
-    if (this.local.isModified('password') || this.local.isNew) {
-
-        bcrypt.hash(user.password, 10, function(err, hash) {
+    console.log(user.password) // Check accident password update
+    if(user.isModified('password') || this.local.isNew) {
+        if(this.local.isModified('password')){
+            console.log('is modifed')
+        }
+        bcrypt.hash(user.password, 12, function (err, hash){
             if (err) {
-                return next(err);
+              return next(err);
             }
             user.password = hash;
             next();
         })
-    } else {
+    }else {
         return next();
     }
-
+    
 });
 
 //create the model for users and expose it to our app
