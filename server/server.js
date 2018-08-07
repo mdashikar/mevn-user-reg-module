@@ -10,9 +10,14 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const serveStatic = require('serve-static');
 const config = require('./config/secret');
+const history = require('connect-history-api-fallback')
 var app = express();
 
-app.use(serveStatic(__dirname + '../../dist'));
+const staticFileMiddleware = serveStatic(__dirname + '../../dist');
+app.use(staticFileMiddleware);
+app.use(history());
+app.use(staticFileMiddleware);
+
 
 mongoose.connect(config.database, function(err){
   if(err) console.log(err);
