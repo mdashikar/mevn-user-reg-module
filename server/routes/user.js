@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
                 var genStr = (+new Date).toString(36).slice(-10) + Math.random().toString(36).slice(-10);
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
-                let updateHash = hash.replace(/[/]/g, '');
+                let updateHash = hash.replace(/[/]/g, '').replace(/[$]/g, '').replace(/[.]/g, '');
                 const link = 'http://account.mdashikar.com/verify/' + updateHash;
 
                 userData.local.name = req.body.name;
@@ -158,7 +158,8 @@ module.exports = function(app, passport) {
                 var genStr = (+new Date).toString(36).slice(-10) + Math.random().toString(36).slice(-10);
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
-                let updateHash = hash.replace(/[/]/g, '');
+                let updateHash = hash.replace(/[/]/g, '').replace(/[$]/g, '').replace(/[.]/g, '');
+                
                 const link = 'http://account.mdashikar.com/reset/' + updateHash;
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
