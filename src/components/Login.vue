@@ -1,11 +1,23 @@
 <template>
     <div class="limiter" v-loading.body="loading">
-        <div class="alert alert-danger fade show" v-if="msg.length > 0" role="alert">
-            <strong>Oh snap!!</strong> {{msg}}
-        </div>
+        
         <div class="container-login100">
-            
+
             <div class="wrap-login100">
+                <el-alert
+                    class="mb-5"
+                    title="Reset Password"
+                    type="success"
+                    :description="successMsg"
+                    show-icon v-if="successMsg.length > 0">
+                </el-alert>
+                <el-alert
+                    class="mb-5"
+                    title="An Error occured"
+                    type="error"
+                    :description="errorMsg"
+                    show-icon v-if="errorMsg">
+                </el-alert>
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="/static/images/img-01.png" alt="IMG">
                 </div>
@@ -41,18 +53,25 @@
                         <span class="txt1">
                             Forgot
                         </span>
-                        <a class="txt2" href="#" @click.prevent="isClicked = !isClicked">
-                            Username / Password?
-                        </a>
-                    </div>
-                    <div class="input-group mb-3 mt-3" v-if="isClicked">
-                        <input type="text" class="form-control" v-model="findUser" placeholder="username/email" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" @click.prevent="sendResetToken" v-loading.fullscreen.lock="fullscreenLoading">Submit</button>
-                        </div>
-                    </div>
+                        
+                        <!-- Form -->
+                        <el-button type="text" @click="dialogFormVisible = true">Password?</el-button>
 
-                    <div class="text-center p-t-96">
+                        <el-dialog title="Reset Password" :visible.sync="dialogFormVisible">
+                            <el-form :model="resetToken">
+                                <el-form-item label="Enter your email" :label-width="formLabelWidth">
+                                    <el-input v-model="resetToken.findUser" auto-complete="off"></el-input>
+                                </el-form-item>
+                            
+                            </el-form>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                                <el-button type="primary" @click="sendResetToken"  v-loading.fullscreen.lock="fullscreenLoading">Submit</el-button>
+                            </span>
+                        </el-dialog>
+                    </div>
+                 
+                    <div class="text-center p-t-46">
         
                         <router-link to="/register" class="txt2">Create your Account <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></router-link>
                     </div>
@@ -71,11 +90,16 @@
             return{
                 email:'',
                 password:'',
-                isClicked: false,
-                findUser : '',
+                resetToken: {
+                    findUser : '',
+                },
                 fullscreenLoading: false,
                 loading: true,
-                msg: ''
+                errorMsg: '',
+                dialogTableVisible: false,
+                dialogFormVisible: false,
+                formLabelWidth: '120px',
+                successMsg: ''
             }
         },
         computed: {
@@ -93,12 +117,18 @@
             },
             sendResetToken(){
                 this.fullscreenLoading = true;
+                this.dialogFormVisible = false;
                 axios.post(this.url + '/reset-password', {
-                    findUser : this.findUser
+                    findUser : this.resetToken.findUser
                 }).
                 then(response => {
                     this.fullscreenLoading = false;
-                    console.log(response);
+                    if(response.data.updateLink){
+                        this.successMsg = 'A reset link has been sent your email.'
+                    }else{
+                        this.errorMsg = response.data;
+                    }
+                    
                 })
                 .catch( e => {
                     console.log(e);
@@ -112,12 +142,20 @@
                 })
                 .then(response => {
                 // JSON responses are automatically parsed.
-                    this.fullscreenLoading = false;
+                    
                     if(response.data.local){
+                       
+                        this.$message({
+                            message: 'Login Successful...',
+                            type: 'success'
+                        });
                         this.setUserData(response.data.local);
+                        this.fullscreenLoading = false;
                         this.$router.push({name: 'User'})
+                        
                     }else{
-                        this.msg = response.data;
+                        this.fullscreenLoading = false;
+                        this.errorMsg = response.data;
                     }
                    
                 })
@@ -128,6 +166,7 @@
             isLoged(){
                 axios.get(this.url + '/user', {withCredentials: true})
                     .then(response => {
+                        
                         this.loading = false;
                         if(response.data.local){
                             this.setUserData(response.data.local);

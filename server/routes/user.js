@@ -43,7 +43,7 @@ module.exports = function(app, passport) {
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
                 let updateHash = hash.replace(/[/]/g, '').replace(/[$]/g, '').replace(/[.]/g, '');
-                const link = 'http://account.mdashikar.com/verify/' + updateHash;
+                const link = 'http://localhost:8080/verify/' + updateHash;
 
                 userData.local.name = req.body.name;
                 userData.local.email = req.body.email;
@@ -55,8 +55,8 @@ module.exports = function(app, passport) {
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'md.arif.ask@gmail.com',
-                        pass: 'Takemig33$$'
+                        user: 'your email',
+                        pass: 'your pass'
                     }
                 });
                 const mailOptions = {
@@ -159,13 +159,13 @@ module.exports = function(app, passport) {
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
                 let updateHash = hash.replace(/[/]/g, '').replace(/[$]/g, '').replace(/[.]/g, '');
-                
-                const link = 'http://account.mdashikar.com/reset/' + updateHash;
+
+                const link = 'http://localhost:8080/reset/' + updateHash;
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'md.arif.ask@gmail.com',
-                        pass: 'Takemig33$$'
+                        user: 'your email',
+                        pass: 'your pass'
                     }
                 });
                 const mailOptions = {
@@ -184,7 +184,7 @@ module.exports = function(app, passport) {
                         console.log(err)
                     } else {
                         res.send({
-                            updateLink: 'sent'
+                            updateLink: true
                         })
                     }
                 });
@@ -198,7 +198,7 @@ module.exports = function(app, passport) {
                 });
 
             } else {
-                res.send('No user found!!!');
+                res.send('Email does not exist!!!');
             }
         });
     });

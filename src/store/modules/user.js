@@ -1,6 +1,6 @@
 const state = {
     user: {},
-    url: 'http://account.mdashikar.com',
+    url: 'http://localhost:5050',
    // baseUrl: 'http://www.account.mdashikar.com'
 }
 const mutations = {
