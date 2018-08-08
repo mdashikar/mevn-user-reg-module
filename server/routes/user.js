@@ -56,7 +56,7 @@ module.exports = function(app, passport) {
                     service: 'gmail',
                     auth: {
                         user: 'md.arif.ask@gmail.com',
-                        pass: 'Takemig33'
+                        pass: 'Takemig33$$'
                     }
                 });
                 const mailOptions = {
@@ -164,7 +164,7 @@ module.exports = function(app, passport) {
                     service: 'gmail',
                     auth: {
                         user: 'md.arif.ask@gmail.com',
-                        pass: 'Takemig33'
+                        pass: 'Takemig33$$'
                     }
                 });
                 const mailOptions = {
