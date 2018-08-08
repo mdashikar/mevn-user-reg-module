@@ -43,7 +43,7 @@ module.exports = function(app, passport) {
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
                 let updateHash = hash.replace(/[/]/g, '');
-                const link = 'http://localhost:8080/verify/' + updateHash;
+                const link = 'http://account.mdashikar.com/verify/' + updateHash;
 
                 userData.local.name = req.body.name;
                 userData.local.email = req.body.email;
@@ -159,7 +159,7 @@ module.exports = function(app, passport) {
                 const saltRounds = 10;
                 let hash = bcrypt.hashSync(genStr, saltRounds);
                 let updateHash = hash.replace(/[/]/g, '');
-                const link = 'http://localhost:8080/reset/' + updateHash;
+                const link = 'http://account.mdashikar.com/reset/' + updateHash;
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
